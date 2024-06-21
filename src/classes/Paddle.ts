@@ -72,6 +72,30 @@ export class Paddle {
             document.addEventListener('mouseup', () => {
                 this.isDragging = false;
             });
+
+            this.paddle.addEventListener('touchstart', (event) => {
+                if (event.touches.length === 1) {
+                    this.isDragging = true;
+                    this.dragOffset = event.touches[0].clientX - this.paddleLeft;
+                }
+            });
+
+            document.addEventListener('touchmove', (event) => {
+                if (this.isDragging && this.paddle) {
+                    const newLeft = event.touches[0].clientX - this.dragOffset;
+                    if (newLeft > 40 && newLeft < 460) {
+                        this.paddle.style.left = `${newLeft}px`;
+                        this.paddleLeft = newLeft;
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                this.isDragging = false;
+            });
+        
+
+            
         }
     }
 
