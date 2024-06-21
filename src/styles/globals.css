@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  border: 1px solid #000;
+  margin: 10% auto;
+  width: 500px;
+  height: 300px;
+  position: relative;
+}
+
+.ball {
+  display: block;
+  position: absolute;
+  background-color: #ff6347;
+  height: 20px;
+  width: 20px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-10px);
+  border-radius: 50%;
+}
+
+.paddle {
+  position: absolute;
+  bottom: 0;
+  left: 50%; 
+  transform: translateX(-40px);
+  width: 80px;
+  height: 20px;
+  background-color: #000;
+}
+
+.blocks {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  gap: 3px;
+}
+
+.blocks-row {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+
+.block {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background-color: #fc3838;
+  border: 2px solid #fa9090;
+}
+
+.null {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  border: none;
+  background: none;
+}
+
+.button {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 40%;
+  transform: translate(-50%, 50%);
+  border: 2px solid #000;
+  padding: 2px;
+  font-size: 16px;
+}
+
+.centralized-element {
+  font-size: 60px;
+  font-family: fantasy;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+}
+
+.loss-p {
+  color: #fc3838;
+}
+
+.winning-p {
+  color: #00ffff;
+}

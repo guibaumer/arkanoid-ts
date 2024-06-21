@@ -1,95 +1,81 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+
+import { Game } from "@/classes/Game";
+import { RowsArray } from "../interfaces/interfaces";
+import Blocks from "@/components/Blocks/Blocks";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const [game, setGame] = useState<Game | null>();
+  const [rows, setRows] = useState<RowsArray>([]);
+  const [running, setRunning] = useState<boolean>(false);
+  const stoppedGameRef = useRef<boolean | null>(null);
+  const [didLose, setDidLose] = useState<boolean>(false);
+  const [didWin, setDidWin] = useState<boolean>(false);
+  const [level, setLevel] = useState<number>(1);
+
+  const startGame = (level: number) => {
+    if (!game) {
+      const newGame = new Game();
+      setGame(newGame);
+      setRows(newGame.defineBlocks(level));
+      stoppedGameRef.current = newGame.stoppedGame;
+    } else {
+      setRows(game.defineBlocks(level));
+      setDidLose(false);
+      setDidWin(false);
+      game.start();
+      stoppedGameRef.current = game.stoppedGame;
+    }
+    setRunning(true);
+  };
+
+  useEffect(() => {
+    if (!game || !running) return;
+    setTimeout(() => {
+      game.computeBlocksProps();
+    }, 1);
+  }, [running]);
+
+  useEffect(() => {
+    didLose && console.log('PERDEU')
+    setLevel(1);
+  }, [didLose]);
+
+  useEffect(() => {
+    didWin && setLevel(prev => prev + 1);
+  }, [didWin]);
+
+  useEffect(() => {
+    if (!game) return;
+    const checkStoppedGame = () => {
+      if (game.stoppedGame !== stoppedGameRef.current) {
+        stoppedGameRef.current = game.stoppedGame;
+        if (document.querySelector('.block')) {
+          setDidLose(true);
+        } else {
+          setDidWin(true);
+        }
+        setRunning(false);
+      }
+    };
+    const intervalId = setInterval(checkStoppedGame, 100); 
+    return () => clearInterval(intervalId); 
+  }, [game]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <>
+    {/* <p>RUNNING: {running ? 'TRUE' : 'FALSE'}</p> */}
+    {/* <p>DID LOSE: {didLose ? 'TRUE' : 'FALSE'}</p> */}
+    {/* <p>DID WIN: {didWin ? 'TRUE' : 'FALSE'}</p> */}
+    <p>LEVEL: {level}</p>
+    
+    <div className="container" id="container">
+      {!running && level === 1 && <button type="button" className="button" onClick={() => startGame(level)}>START</button>}
+      {!running && level > 1 && <button type="button" className="button" onClick={() => startGame(level)}>START LEVEL {level}</button>}
+      {running && <Blocks rows={rows} didLose={didLose} />}
+    </div>
+    </>
   );
 }
+ 
