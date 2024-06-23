@@ -1,0 +1,2 @@
+In this folder there's an image that should help to understand
+how the paddle interacts with the ball.

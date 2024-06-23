@@ -92,10 +92,7 @@ export class Paddle {
 
             document.addEventListener('touchend', () => {
                 this.isDragging = false;
-            });
-        
-
-            
+            });            
         }
     }
 
