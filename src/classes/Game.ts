@@ -19,6 +19,7 @@ export class Game {
     containerWidth: number;
     blocksBottomLimit: number | null;
     blocksTopLimit: number | null;
+    speed: number;
 
     constructor() {
         // ELEMENTS
@@ -44,6 +45,9 @@ export class Game {
         this.level = 1;
         this.blocksBottomLimit = null;
         this.blocksTopLimit = null;
+
+        this.speed = 1;
+        // problems with higher speeds
 
         this.start();
     }
@@ -251,8 +255,8 @@ export class Game {
                     if (!this.blocks) return;
 
                     if (this.bottom > 0 && this.left < 490) {
-                        this.ball.ball!.style.bottom = `${this.bottom -= verticalMovement}px`;
-                        this.ball.ball!.style.left = `${this.left += horizontalMoviment}px`;
+                        this.ball.ball!.style.bottom = `${this.bottom -= (verticalMovement * this.speed)}px`;
+                        this.ball.ball!.style.left = `${this.left += (horizontalMoviment * this.speed)}px`;
 
                         if (this.checkForBlockCollision()) {
                             return this.collision(direction);
@@ -272,8 +276,8 @@ export class Game {
                     if (!this.blocks) return;
 
                     if (this.bottom > 0 && this.left > 10) {
-                        this.ball.ball!.style.bottom = `${this.bottom -= verticalMovement}px`;
-                        this.ball.ball!.style.left = `${this.left -= horizontalMoviment}px`;
+                        this.ball.ball!.style.bottom = `${this.bottom -= (verticalMovement * this.speed)}px`;
+                        this.ball.ball!.style.left = `${this.left -= (horizontalMoviment * this.speed)}px`;
                         
                         if (this.checkForBlockCollision()) {
                             return this.collision(direction);
@@ -293,8 +297,8 @@ export class Game {
                     if (!this.blocks) return;
 
                     if (this.bottom < 280 && this.left > 10) {
-                        this.ball.ball!.style.bottom = `${this.bottom += verticalMovement}px`;
-                        this.ball.ball!.style.left = `${this.left -= horizontalMoviment}px`;
+                        this.ball.ball!.style.bottom = `${this.bottom += (verticalMovement * this.speed)}px`;
+                        this.ball.ball!.style.left = `${this.left -= (horizontalMoviment * this.speed)}px`;
                         
                         if (this.checkForBlockCollision()) {
                             return this.collision(direction);
@@ -312,8 +316,8 @@ export class Game {
                     if (!this.blocks) return;
 
                     if (this.bottom < 280 && this.left < 490) {
-                        this.ball.ball!.style.bottom = `${this.bottom += verticalMovement}px`;
-                        this.ball.ball!.style.left = `${this.left += horizontalMoviment}px`;
+                        this.ball.ball!.style.bottom = `${this.bottom += (verticalMovement * this.speed)}px`;
+                        this.ball.ball!.style.left = `${this.left += (horizontalMoviment * this.speed)}px`;
                         
                         if (this.checkForBlockCollision()) {
                             return this.collision(direction);
@@ -321,7 +325,7 @@ export class Game {
 
                         this.animationFrameId = requestAnimationFrame(rt);
                     } else {
-                        this.collision(direction)
+                        this.collision(direction);
                     }
                 }
                 rt();
